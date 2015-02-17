@@ -22,4 +22,11 @@ deploy-service does not depend on deploy-libs
 	the default target doesn't work becuase auto-deploy calls deploy-
 	client or deploy-service or both.
 
+The variable in the makefile is NAMESPACE.
+
+The value is meant to ensure that the id of the handle, which is a
+field in a relational database, is unique across relational database
+instances.
+
+Current examples include KBH.
 
