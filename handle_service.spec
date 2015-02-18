@@ -111,11 +111,12 @@ module AbstractHandle {
 
 	/* STANDARD FUNCTIONS FOR MANAGING HANDLES */
 
-	/* Given a list of node ids, this function returns
-	   a list of handles.
-	*/
-	funcdef ids_to_handles(list<NodeId> ids)
-		returns(list<Handle> handles);
+        /* Given a list of ids, this function returns
+           a list of handles. In the case of handles of type
+           shock, the list of ids are shock node ids.
+        */
+        funcdef ids_to_handles(list<string> ids) returns (list<Handle> handles)
+                authentication required;
 
 	/* Given a list of handle ids, this function returns
 	   a list of handles.
@@ -156,12 +157,5 @@ module AbstractHandle {
 	funcdef give (string user, string perm, Handle h)
 		returns() authentication required;
 
-	/* Given a list of ids, this function returns
-           a list of handles. In case of Shock, the list of ids
-           are shock node ids and this function the handles, which
-           contains Shock url and related information.
-	*/
-	funcdef ids_to_handles(list<string> ids) returns (list<Handle> handles)
-		authentication required;
 };
 
