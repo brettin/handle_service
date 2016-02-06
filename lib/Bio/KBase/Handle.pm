@@ -15,7 +15,7 @@ sub encode_handle {
   my $encoded;
 
   if (ref $h eq 'HASH') {
-    $encoded = encode_base64(handle_to_json( $h ));
+    $encoded = encode_base64(handle_to_json( $h ), "");
   }
   else {
     $encoded = encode_base64($h, "");
@@ -86,23 +86,23 @@ json representations of handle service handles.
 
 =head2 Methods
 
-=over 12
+=over 
 
-=item C<encode_handle>
+=item encode_handle
 
 Encodes a base64 json representation of a handle. This function can
 take either a json string or a perl hash representation of the json
 handle.
 
-=item C<decode_handle>
+=item decode_handle
 
 Decodes a base64 json representation of a handle.
 
-=item C<handle_to_perl>
+=item handle_to_perl
 
 Converts a json represetnation of a handle into a perl hash.
 
-=item C<handle_to_jason>
+=item handle_to_jason
 
 Converts a perl hash representation of a handle into a json string.
 
