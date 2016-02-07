@@ -1,5 +1,6 @@
 use strict;
 use Bio::KBase::HandleService;
+use Bio::KBase::Handle qw(decode_handle);
 use Getopt::Long; 
 use JSON;
 use Pod::Usage;
@@ -7,17 +8,19 @@ use Pod::Usage;
 my $man  = 0;
 my $help = 0;
 my ($in, $out);
-my ($handle);
+my ($handle, $encode);
 
 GetOptions(
 	'h'	=> \$help,
         'i=s'   => \$in,
         'o=s'   => \$out,
+        'e'     => \$encode,
 	'help'	=> \$help,
 	'man'	=> \$man,
 	'input=s'  => \$in,
 	'output=s' => \$out,
 	'handle=s' => \$handle,
+  'encode'   => \$encode,
 
 ) or pod2usage(0);
 
@@ -57,7 +60,7 @@ else {
 # main logic
 # there must be an ih and an out
 my $obj = Bio::KBase::HandleService->new();
-my $h = deserialize_handle($ih);
+my $h = deserialize_handle($ih, $encode);
 my $rv  = $obj->download($h, $out);
 
 
@@ -72,9 +75,14 @@ sub serialize_handle {
 sub deserialize_handle {
 	my $ih = shift or
 		die "in not passed to deserialize_handle";
+  my $encode = shift;
+
 	my ($json_text, $perl_scalar);
 	$json_text .= $_ while ( <$ih> );
-	$perl_scalar = from_json( $json_text, { utf8  => 1 } );
+  if( $encode ) {
+    $json_text = decode_handle($json_text);
+  }
+ 	$perl_scalar = from_json( $json_text, { utf8  => 1 } );
 }
 
  
@@ -104,6 +112,8 @@ The download command calls the download method of a Bio::KBase::HandleService ob
 =item   --handle     The input file containing the handle. If not specified, then defaults to STDIN.
 
 =item   -o, --output The file to write the downloaded data to (REQUIRED)
+
+=item   -e, --encode The json representaiton of the handle is base64 encoded.
 
 =back
 
