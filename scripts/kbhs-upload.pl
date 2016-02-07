@@ -1,5 +1,6 @@
 use strict;
 use Bio::KBase::HandleService;
+use Bio::KBase::Handle qw(encode_handle);
 use Getopt::Long; 
 use JSON;
 use Pod::Usage;
@@ -7,17 +8,19 @@ use Data::Dumper;
 
 my $man  = 0;
 my $help = 0;
+my $encode;
 my ($in, $out);
 
 GetOptions(
 	'h'	=> \$help,
         'i=s'   => \$in,
         'o=s'   => \$out,
+  'e' => \$encode,
 	'help'	=> \$help,
 	'man'	=> \$man,
 	'input=s'  => \$in,
 	'output=s' => \$out,
-
+  'encode'   => \$encode,
 ) or pod2usage(0);
 
 
@@ -62,15 +65,21 @@ else {
 
 my $obj = Bio::KBase::HandleService->new();
 my $rv  = $obj->upload($in);
-serialize_handle($oh, $rv);
+serialize_handle($oh, $rv, $encode);
 
 sub serialize_handle {
 	my $oh = shift or
 		die "output file handle not passed to serialize_handle";
 	my $handle = shift or
 		die "handle not passed to serialize_handle";
+  my $encode = shift;
         my $json_text = to_json( $handle, { ascii => 1, pretty => 1 } );
-	print $oh $json_text;
+  if ($encode) {
+    print $oh encode_handle($handle);
+  }
+  else {
+	  print $oh $json_text;
+  }
 }	
 
 
@@ -109,6 +118,8 @@ The upload command calls the upload method of a Bio::KBase::HandleService object
 =item   -i, --input  The input file containing the data to upload
 
 =item   -o, --output The output file containing the serialized data handle, default is STDOUT
+
+=item   -e, --encode The output is base64 encoded.
 
 =back
 
