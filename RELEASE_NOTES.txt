@@ -8,3 +8,6 @@ Initial release of handle service. v.0.1.0
 Authentiation is now optional. If used in unauthenticated
 mode, then anyone who is operating in the unauthenticated
 mode will be able to see the handle and retreive the data.
+
+02/6/2016
+Base64 encoding and decoding of handles is now supported.
